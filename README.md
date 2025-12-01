@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Project Name — Human Resource Information System with Chat AI by Kodingan Bergizi Gratis
 
-## Getting Started
+## 📌 Overview
 
-First, run the development server:
+HRIS ini dirancang dengan chat ai seperti chat gpt agar memudah kan user menginput layaknya chat tidak perlu melakukan inputan satu persatu
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🧱 System Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔹 Desain Sistem
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Aplikasi mengikuti arsitektur modular dan layered:
 
-## Learn More
+- **UI layer** → hanya menangani tampilan & interaksi pengguna
+- **Business logic layer** → mengelola state, hooks, dan logika domain
+- **Data access layer** → mengatur fetch API dan komunikasi dengan backend
 
-To learn more about Next.js, take a look at the following resources:
+Dengan pemisahan ini, perubahan pada logika bisnis tidak akan memengaruhi UI secara langsung, sehingga memudahkan scaling fitur, debugging, dan kolaborasi.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔹 Arsitektur Data Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📝 Penjelasan Folder Structure
 
-## Deploy on Vercel
+| Folder        | Fungsi                            |
+| ------------- | --------------------------------- |
+| `app/`        | Routing & server components       |
+| `components/` | UI components reusable            |
+| `features/`   | Business logic berdasarkan domain |
+| `services/`   | Data fetching & API wrapper       |
+| `lib/`        | Utilities, config, types global   |
+| `styles/`     | Styling global                    |
+| `assets/`     | Static assets                     |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Dengan struktur ini:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- UI tidak tercampur dengan API call
+- State management tidak tercampur dengan komponen UI
+- Setiap domain bisa dikembangkan/diperluas tanpa mengganggu yang lain
+
+---
