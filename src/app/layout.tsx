@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarApp from "@/components/layouts/Sidebar/Sidebar";
 import { outfit } from "@/lib/font.utils";
+import HeaderApp from "@/components/layouts/Header/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +20,15 @@ export default function RootLayout({
       <body className={` ${outfit.className} antialiased`}>
         <SidebarProvider>
           <SidebarApp />
-          {children}
+
+          <main className="w-full">
+            <HeaderApp
+              text="Lihat Dashboard Anda"
+              textColor="text-blue-500"
+            ></HeaderApp>
+            <SidebarTrigger className="block md:hidden" />
+            {children}
+          </main>
         </SidebarProvider>
       </body>
     </html>
