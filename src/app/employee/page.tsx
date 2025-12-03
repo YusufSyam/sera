@@ -1,8 +1,11 @@
+"use client";
+
 import FormModal from "@/components/shared/FormModal/FormModal";
 import HeaderWithButton from "@/components/shared/HeaderWithButton/HeaderWithButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import EmployeeTable from "@/features/employee/components/EmployeeTable";
 import { IconUsersGroup } from "@tabler/icons-react";
 
 const EmployeePage = () => {
@@ -25,9 +28,9 @@ const EmployeePage = () => {
               <Input id="name" name="name" placeholder="Masukkan Nama" />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="phone-number">Nomor Telepon</Label>
+              <Label htmlFor="gaji">Gaji</Label>
               <Input
-                id="phone-number"
+                id="gaji"
                 name="phoneNumber"
                 placeholder="Masukkan No.Telp / WA"
               />
@@ -51,6 +54,8 @@ const EmployeePage = () => {
           </div>
         </FormModal>
       </HeaderWithButton>
+
+      <EmployeeTable />
     </section>
   );
 };

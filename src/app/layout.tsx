@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import SidebarApp from "@/components/layouts/Sidebar/Sidebar";
 import { outfit } from "@/lib/font.utils";
 import HeaderApp from "@/components/layouts/Header/Header";
+import TanstackProvider from "@/providers/TanstackProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,18 +19,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` ${outfit.className} antialiased`}>
-        <SidebarProvider>
-          <SidebarApp />
+        <TanstackProvider>
+          <SidebarProvider>
+            <SidebarApp />
 
-          <main className="w-full">
-            <HeaderApp
-              text="Lihat Dashboard Anda"
-              textColor="text-blue-500"
-            ></HeaderApp>
-            <SidebarTrigger className="block md:hidden" />
-            {children}
-          </main>
-        </SidebarProvider>
+            <main className="w-full">
+              <HeaderApp
+                text="Lihat Dashboard Anda"
+                textColor="text-blue-500"
+              ></HeaderApp>
+              <SidebarTrigger className="block md:hidden" />
+              {children}
+            </main>
+          </SidebarProvider>
+        </TanstackProvider>
       </body>
     </html>
   );
