@@ -1,6 +1,4 @@
-import HeaderApp from "@/components/layouts/Header/Header";
-import InputWithButton from "@/components/shared/InputWithButton/InputWithButton";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import InputMessage from "@/features/chat/components/InputMessage";
 
 export default function Home({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +9,7 @@ export default function Home({ children }: { children: React.ReactNode }) {
 
       <div className="my-12"></div>
 
-      <InputWithButton />
+      <InputMessage />
       {children}
     </section>
   );

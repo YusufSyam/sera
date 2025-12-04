@@ -9,10 +9,8 @@ import {
 import { ITableDataPropsType } from "./types";
 
 export const TableData = ({ columns, data }: ITableDataPropsType<any>) => {
-  console.log(`data = ${columns}`);
-
   return (
-    <Table>
+    <Table className="">
       <TableHeader>
         <TableRow>
           {columns.map((item, key) => {
@@ -25,7 +23,7 @@ export const TableData = ({ columns, data }: ITableDataPropsType<any>) => {
         {data.map((row, i) => {
           return (
             <TableRow key={i + 1}>
-              <TableCell>{i + 1}</TableCell>
+              {/* <TableCell>{i + 1}</TableCell> */}
               {columns.map((c) => {
                 return (
                   <TableCell key={String(c.key)}>

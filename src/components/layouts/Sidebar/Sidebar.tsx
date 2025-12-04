@@ -3,6 +3,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { sidebarItemsData } from "@/lib/shared.utils";
 import NavItem from "../Navbar/NavItem";
+import HistoryItem from "@/features/chat/components/HistoryItems";
 
 const SidebarApp = () => {
   return (
@@ -41,6 +43,18 @@ const SidebarApp = () => {
                   </SidebarMenuItem>
                 );
               })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+
+          <div className="w-full h-0.5 bg-gray-200 my-5"></div>
+
+          <SidebarGroupLabel className="text-neutral-400 font-normal text-base">
+            Chat History
+          </SidebarGroupLabel>
+
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <HistoryItem />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

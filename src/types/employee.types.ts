@@ -1,11 +1,14 @@
+import { IJabatanResponseApiType } from "./jabatan.types";
+
 export interface IEmployeeResponseApiDataTypes {
   nama: string;
   gaji: number;
   tanggal_masuk: string;
-  jabatan_id: string;
+  jabatan: IJabatanResponseApiType;
 }
 
 export interface IEmployeeResponseDataTypes {
+  id: number;
   nama: string;
   gaji: number;
   tanggal_masuk: string;

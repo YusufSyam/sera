@@ -3,10 +3,6 @@ import { TableData } from "@/components/shared/TableData/TableData";
 
 const employeeColumnsData = [
   {
-    key: "no",
-    label: "No",
-  },
-  {
     key: "nama",
     label: "Nama",
   },

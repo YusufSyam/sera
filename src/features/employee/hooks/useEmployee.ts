@@ -8,7 +8,10 @@ export const useGetAllEmployes = () => {
   return useQuery({
     queryKey: [GET_ALL_EMPLOYEE_QUERY_KEY],
     queryFn: async () => {
-      return (await employeeService.getAll()).data;
+      const response = await employeeService.getAll();
+      const data = response.data;
+
+      return data;
     },
   });
 };

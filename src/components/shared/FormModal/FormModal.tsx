@@ -23,7 +23,7 @@ const FormModal = ({
 
   return (
     <Modal>
-      <form>
+      <form className="">
         <DialogTrigger asChild>
           <Button className="w-fit bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-xs md:text-sm  text-white">
             {btnText}

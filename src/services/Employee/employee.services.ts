@@ -1,30 +1,39 @@
 import { supabaseClient } from "@/lib/supabase/client";
-import { IApiGeneralResponseType } from "@/types/base_api.types";
+import { IApiSupabaseGeneralResponseType } from "@/types/base_api.types";
 import {
   IEmployeeResponseApiDataTypes,
   IEmployeeResponseDataTypes,
 } from "@/types/employee.types";
+import { IJabatanResponseApiType } from "@/types/jabatan.types";
 
 class EmployeeServices {
   async getAll(): Promise<
-    IApiGeneralResponseType<IEmployeeResponseDataTypes[]>
+    IApiSupabaseGeneralResponseType<IEmployeeResponseDataTypes[]>
   > {
     try {
-      const response = await supabaseClient.from("pegawai").select("*");
+      const { data, status, error } = await supabaseClient.from("pegawai")
+        .select(`id, 
+                 nama, 
+                 gaji,  
+                 tanggal_masuk,
+                 jabatan:jabatan_id!inner (id, nama_jabatan)`);
 
-      const data: IEmployeeResponseApiDataTypes[] = response.data ?? [];
-
-      const mappingData: IEmployeeResponseDataTypes[] = data?.map((item) => {
-        return {
-          nama: item.nama,
-          gaji: item.gaji,
-          posisi: item.jabatan_id,
-          tanggal_masuk: item.tanggal_masuk,
-        };
-      });
+      const mappingData: IEmployeeResponseDataTypes[] = (data ?? []).map(
+        (item) => {
+          return {
+            id: item.id,
+            nama: item.nama,
+            gaji: item.gaji,
+            posisi: (item as any).jabatan.nama_jabatan,
+            tanggal_masuk: item.tanggal_masuk,
+          };
+        }
+      );
 
       return {
         data: mappingData,
+        status,
+        error,
       };
     } catch (error) {
       throw error;
