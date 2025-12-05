@@ -1,6 +1,6 @@
 import InputMessage from "@/features/chat/components/InputMessage";
 
-export default function Home({ children }: { children: React.ReactNode }) {
+export default function MainPage({ children }: { children: React.ReactNode }) {
   return (
     <section className="w-full px-5">
       <h1 className="text-3xl md:text-5xl font-medium text-center mt-52">

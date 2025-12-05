@@ -41,7 +41,7 @@ const InputMessage = () => {
   };
 
   return (
-    <div className="md:px-12  w-full left-0 sticky ">
+    <div className="md:px-10  w-full left-0 sticky ">
       <form onSubmit={(e) => handleSendMessage(e)}>
         <form.Field
           name="chatInput"
