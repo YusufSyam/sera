@@ -2,7 +2,8 @@
 
 import { GET_ALL_EMPLOYEE_QUERY_KEY } from "@/constant/query_key";
 import employeeService from "@/services/Employee/employee.services";
-import { useQuery } from "@tanstack/react-query";
+import { IInsertEmployeRequestApiDataTypes } from "@/types/employee.types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetAllEmployes = () => {
   return useQuery({
@@ -12,6 +13,14 @@ export const useGetAllEmployes = () => {
       const data = response.data;
 
       return data;
+    },
+  });
+};
+
+export const useInsertEmployee = () => {
+  return useMutation({
+    mutationFn: (payload: IInsertEmployeRequestApiDataTypes[]) => {
+      return employeeService.createEmployee(payload);
     },
   });
 };

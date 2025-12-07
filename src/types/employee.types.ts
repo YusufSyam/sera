@@ -14,3 +14,10 @@ export interface IEmployeeResponseDataTypes {
   tanggal_masuk: string;
   posisi: string;
 }
+
+export interface IInsertEmployeRequestApiDataTypes {
+  nama: string;
+  gaji: number;
+  tanggal_masuk: Date;
+  jabatan_id: number;
+}

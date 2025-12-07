@@ -10,7 +10,7 @@ const HeaderWithButton = ({
   const Icon = icon;
 
   return (
-    <section className="flex items-center justify-between py-10 md:px-20">
+    <section className="flex items-center justify-between py-10 ">
       <div className="flex gap-3 items-center w-fit">
         <div className="w-fit p-2 rounded-md bg-[#C5DDFF]">
           <Icon className="text-[#006AFF] size-5 md:size-8" />
