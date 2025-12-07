@@ -31,6 +31,7 @@ const InputMessage = () => {
     try {
       const todaysId = getSessionIdPerDay();
 
+      console.log(`todays id = ${todaysId}`);
       mutate({
         chatInput: payload.chatInput,
         sessionId: todaysId,
