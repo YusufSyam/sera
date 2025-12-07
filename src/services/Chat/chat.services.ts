@@ -8,9 +8,17 @@ import {
 class ChatServices {
   async sendMessage(params: ISendMessageChatRequestType) {
     try {
-      const response: { output: string } = await axios.post("/", { ...params });
+      const response = await supabaseClient.functions.invoke(
+        "chatBot",
+        {
+          body: {
+            chatInput: `${params.chatInput}`,
+            sessionId: params.sessionId,
+          },
+        }
+      );
 
-      return response.output;
+      return response.data;
     } catch (error) {
       throw error;
     }
