@@ -13,12 +13,15 @@ class ChatServices {
   ): Promise<IApiAxiosResponseType<IChatbotResponseType>> {
     try {
       const response = await axios.post(
-        "/chatbot",
-        { ...params },
+        "https://rvihjnuexvumovkcprdb.supabase.co/functions/v1/chatBot",
+        {
+          ...params,
+        },
+
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2aWhqbnVleHZ1bW92a2NwcmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1OTAzODMsImV4cCI6MjA4MDE2NjM4M30.uQXuirjcSqYbPcfO5AqhoL2xy4YUXknwro_Rw7rGNqE
-`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2aWhqbnVleHZ1bW92a2NwcmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1OTAzODMsImV4cCI6MjA4MDE2NjM4M30.uQXuirjcSqYbPcfO5AqhoL2xy4YUXknwro_Rw7rGNqE`,
           },
         }
       );

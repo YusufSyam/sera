@@ -21,10 +21,6 @@ const ChatField = () => {
           />
         );
       })}
-      <MessageBox
-        type="ai"
-        message="Halo saya ai yang akan menjawab semua pertannyan dan kebutuhan anda"
-      />
     </div>
   );
 };

@@ -11,14 +11,28 @@ import { useSendMessage } from "../hooks/useChat";
 import { useForm } from "@tanstack/react-form";
 import { ISendMessageChatRequestType } from "@/types/chat.types";
 
+const getSessionIdPerDay = (prefix: string = 'DAILY'): string => {
+  const now = new Date();
+  
+  // Mengambil komponen tanggal saja
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  // Menggabungkan menjadi string
+  return `${prefix}-${year}${month}${day}`;
+};
+
 const InputMessage = () => {
   const { mutate } = useSendMessage();
 
   const mutationSendMessage = async (payload: ISendMessageChatRequestType) => {
     try {
+      const todaysId= getSessionIdPerDay()
+
       mutate({
         chatInput: payload.chatInput,
-        sessionId: `bdce84ef2a9d4cc69fc5d7d57ca90888`,
+        sessionId: todaysId,
       });
     } catch (error) {
       console.log("error");
