@@ -48,7 +48,7 @@ class EmployeeServices {
         .select(`id, 
                  nama_jabatan`);
 
-              console.log('jabatan',data)
+      console.log("jabatan", data);
 
       return {
         data: data ?? [],
@@ -74,6 +74,51 @@ class EmployeeServices {
         status,
         success: true,
         data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateEmployee(
+    id: number,
+    payload: Partial<IInsertEmployeRequestApiDataTypes>
+  ) {
+    try {
+      const { data, status, error } = await supabaseClient
+        .from("pegawai")
+        .update(payload)
+        .eq("id", id)
+        .select();
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {
+        status,
+        success: true,
+        data,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteEmployee(id: number) {
+    try {
+      const { status, error } = await supabaseClient
+        .from("pegawai")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return {
+        status,
+        success: true,
       };
     } catch (error) {
       throw error;

@@ -35,7 +35,9 @@ import {
 import {
   BanknoteArrowUp,
   BrainCircuit,
+  Pencil,
   Plus,
+  Trash2,
   UserPlus,
   Users,
 } from "lucide-react";
@@ -51,13 +53,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import AddEmployeeForm from "./AddEmployeeForm";
-import { useInsertEmployee } from "@/features/employee/hooks/useEmployee";
+import {
+  useDeleteEmployee,
+  useInsertEmployee,
+  useUpdateEmployee,
+} from "@/features/employee/hooks/useEmployee";
 import { useToast } from "@/hooks/use-toast";
+import EditEmployeeForm, { IEditEmployeeData } from "./EditEmployeeForm";
 
 const DashboardPage = () => {
   const [employees, setEmployees] = useState<IEmployeeResponseDataTypes[]>([]);
+  const [selectedEmployee, setSelectedEmployee] =
+    useState<IEditEmployeeData | null>(null);
+  const [deletedEmployeeId, setDeletedEmployeeId] = useState(0);
 
-  const [showForm, setShowForm] = useState(false);
+  const [showInsertForm, setShowInsertForm] = useState(false);
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [employeesPage, setEmployeePage] = useState(1);
   const { toast } = useToast();
@@ -78,12 +90,18 @@ const DashboardPage = () => {
   });
 
   const { data, isLoading, refetch } = useGetAllEmployees();
-  const { mutate: insertEmployee, isSuccess: isInsertSuccess } = useInsertEmployee();
+  const {
+    mutate: insertEmployee,
+    isPending: isInserting,
+    isSuccess: isInsertSuccess,
+  } = useInsertEmployee();
+  const { mutate: editEmployee, isPending: isRemoving } = useUpdateEmployee();
+  const { mutate: removeEmployee, isPending: isEditing } = useDeleteEmployee();
 
   console.log("data", data);
   useEffect(() => {
-    refetch()
-  }, [isInsertSuccess])
+    refetch();
+  }, [isInsertSuccess]);
 
   useEffect(() => {
     if (data) {
@@ -93,16 +111,15 @@ const DashboardPage = () => {
   }, [data]);
   const totalEmployeePages = Math.ceil(employees.length / employeesPerPage);
 
-
   const handleCreateEmployee = (data: IInsertEmployeRequestApiDataTypes) => {
     const formattedDate = data?.tanggal_masuk?.toISOString()?.split("T")[0];
 
-    const payload : any[] = [{
-      ...data,
-      tanggal_masuk: formattedDate,
-    }];
-
-    // console.log(payload, 'payload')
+    const payload: any[] = [
+      {
+        ...data,
+        tanggal_masuk: formattedDate,
+      },
+    ];
 
     insertEmployee(payload, {
       onSuccess: () => {
@@ -111,19 +128,92 @@ const DashboardPage = () => {
           description: "Data karyawan berhasil ditambahkan.",
           variant: "default",
         });
-        console.log('ke sukses')
-        setShowForm(false); 
+        console.log("ke sukses");
+        refetch();
+        setShowInsertForm(false);
       },
       onError: (error) => {
         toast({
           title: "Gagal",
           description: `Terjadi kesalahan: ${error?.message}`,
           variant: "destructive",
-        }); 
-        console.log('ke error')
-        setShowForm(false); 
+        });
+        console.log("ke error");
+        setShowInsertForm(false);
       },
     });
+  };
+  const handleSaveEdit = (
+    id: number,
+    values: Partial<IInsertEmployeRequestApiDataTypes>
+  ) => {
+    editEmployee(
+      {
+        id: id,
+        payload: values,
+      },
+      {
+        onSuccess: () => {
+          refetch();
+
+          toast({
+            title: "Berhasil!",
+            description: "Data karyawan berhasil diperbarui.",
+            variant: "default",
+          });
+          setShowEditForm(false);
+        },
+        onError: (error) => {
+          console.error(error);
+
+          toast({
+            title: "Gagal",
+            description: `Terjadi kesalahan: ${error?.message}`,
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
+
+  const handleDelete = (id: number) => {
+
+    removeEmployee(id, {
+      onSuccess: () => {
+        refetch();
+
+        toast({
+          title: "Berhasil!",
+          description: "Data karyawan berhasil dihapus.",
+          variant: "default",
+        });
+        setShowDeleteForm(false)
+      },
+      onError: (error) => {
+        console.error(error);
+
+        toast({
+          title: "Gagal",
+          description: `Terjadi kesalahan: ${error?.message}`,
+          variant: "destructive",
+        });
+        setShowDeleteForm(false)
+      },
+    });
+  };
+
+  const handleEditClick = (
+    employeeData: IEmployeeResponseDataTypes,
+    id: number
+  ) => {
+    setSelectedEmployee({
+      id: id,
+      nama: employeeData?.nama,
+      gaji: employeeData?.gaji,
+      jabatan_id: employeeData?.jabatan_id,
+      tanggal_masuk: new Date(employeeData?.tanggal_masuk),
+    });
+    setShowEditForm(true);
   };
 
   return (
@@ -136,19 +226,63 @@ const DashboardPage = () => {
         </p>
       </h1>
 
-      <Dialog open={showForm} onOpenChange={setShowForm}>
+      <Dialog open={showInsertForm} onOpenChange={setShowInsertForm}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Tambah Data Karyawan</DialogTitle>
             <DialogDescription>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod,
-              suscipit?
+              Lengkapi formulir berikut untuk menambahkan data pegawai baru ke
+              dalam sistem
             </DialogDescription>
           </DialogHeader>
           <AddEmployeeForm
             onSubmit={handleCreateEmployee}
-            onCancel={() => setShowForm(false)}
-            isLoading={false}
+            onCancel={() => setShowInsertForm(false)}
+            isLoading={isInserting}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showDeleteForm} onOpenChange={setShowDeleteForm}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Hapus Data Karyawan</DialogTitle>
+            <DialogDescription>Yakin ingin menghapus data?</DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-row gap-4 self-end">
+            <Button
+              variant="outline"
+              onClick={() => setShowDeleteForm(false)}
+              title="cancel"
+            >
+              Batal
+            </Button>
+
+            <Button
+              variant="destructive"
+              onClick={() => handleDelete(deletedEmployeeId)}
+              title="Hapus"
+            >
+              Hapus
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Data Karyawan</DialogTitle>
+            <DialogDescription>
+              Lakukan perubahan pada data pegawai di bawah ini. Pastikan data
+              sudah benar sebelum disimpan
+            </DialogDescription>
+          </DialogHeader>
+          <EditEmployeeForm
+            initialData={selectedEmployee!} // Pass data pegawai yang dipilih
+            onSubmit={handleSaveEdit} // Pass fungsi submit
+            onCancel={() => setShowEditForm(false)} // Pass fungsi tutup modal
+            isLoading={isEditing} // Pass status loading
           />
         </DialogContent>
       </Dialog>
@@ -229,7 +363,7 @@ const DashboardPage = () => {
                 <Button
                   color="blue"
                   className="bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white cursor-pointer"
-                  onClick={() => setShowForm(true)}
+                  onClick={() => setShowInsertForm(true)}
                 >
                   <Plus className="h-4 w-4" />
                   <p>Tambah Karyawan</p>
@@ -259,6 +393,30 @@ const DashboardPage = () => {
                         <TableCell>{formatRupiah(employee.gaji)}</TableCell>
                         <TableCell>
                           {formatDate(new Date(employee.tanggal_masuk))}
+                        </TableCell>
+                        <TableCell className="flex justify-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() =>
+                              handleEditClick(employee, employee?.id)
+                            }
+                            title="Edit"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => {
+                              setDeletedEmployeeId(employee.id);
+                              setShowDeleteForm(true);
+                            }}
+                            title="Hapus"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     )

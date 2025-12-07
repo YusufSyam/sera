@@ -36,3 +36,19 @@ export const useInsertEmployee = () => {
     },
   });
 };
+
+export const useUpdateEmployee = () => {
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: Partial<IInsertEmployeRequestApiDataTypes> }) => {
+      return employeeService.updateEmployee(id, payload);
+    },
+  });
+};
+
+export const useDeleteEmployee = () => {
+  return useMutation({
+    mutationFn: (id: number) => {
+      return employeeService.deleteEmployee(id);
+    },
+  });
+};
