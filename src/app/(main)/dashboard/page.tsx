@@ -42,7 +42,6 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { TopPositionCharts } from "./TopPositionCharts";
 import { getSessionIdPerDay } from "@/lib/utils";
 import { formatDate } from "@/lib/dateFuncs.utils";
 import {
@@ -382,7 +381,16 @@ const DashboardPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentEmployees.map(
+                  {
+                    currentEmployees?.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={6} className="h-24 text-center">
+                          Tidak ada data
+                        </TableCell>
+                      </TableRow>
+                    )
+                  }
+                  {currentEmployees?.map(
                     (employee: IEmployeeResponseDataTypes, index: number) => (
                       <TableRow key={employee.id}>
                         <TableCell>
