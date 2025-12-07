@@ -4,13 +4,25 @@ import {
   ISendMessageChatRequestType,
 } from "@/types/chat.types";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const useSendMessage = () => {
-  return useMutation({
+  const [isLoadingSendMessage, setIsLoadingSendMessage] =
+    useState<boolean>(false);
+
+  const mutation = useMutation({
     mutationFn: (payload: ISendMessageChatRequestType) => {
       return chatServices.sendMessage(payload);
     },
+    onSuccess: () => {
+      setIsLoadingSendMessage(true);
+      setTimeout(() => {
+        setIsLoadingSendMessage(false);
+      }, 1500);
+    },
   });
+
+  return { ...mutation, isLoadingSendMessage };
 };
 
 export const useGetHistoryChats = (params: IGetChatMessageRequestType) => {

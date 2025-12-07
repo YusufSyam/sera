@@ -12,11 +12,24 @@ import {
 import { sidebarItemsData } from "@/lib/shared.utils";
 import NavItem from "../Navbar/NavItem";
 import HistoryItem from "@/features/chat/components/HistoryItems";
+import Image from "next/image";
+import { ChatbotLogo } from "@/assets/images";
 
 const SidebarApp = () => {
   return (
     <Sidebar>
-      <SidebarHeader></SidebarHeader>
+      <SidebarHeader className="flex flex-row items-center">
+        <Image
+          src={ChatbotLogo}
+          width={400}
+          height={400}
+          className="w-10 h-10"
+          alt=""
+        />
+        <p className="text-xl font-semibold">S.E.R.A</p>
+      </SidebarHeader>
+
+      <div className="my-2"></div>
 
       <SidebarContent>
         <SidebarGroup>

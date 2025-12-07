@@ -10,25 +10,26 @@ import TextareaAutoSize from "react-textarea-autosize";
 import { useSendMessage } from "../hooks/useChat";
 import { useForm } from "@tanstack/react-form";
 import { ISendMessageChatRequestType } from "@/types/chat.types";
+import { Spinner } from "@/components/ui/spinner";
 
-const getSessionIdPerDay = (prefix: string = 'DAILY'): string => {
+const getSessionIdPerDay = (prefix: string = "DAILY"): string => {
   const now = new Date();
-  
+
   // Mengambil komponen tanggal saja
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
 
   // Menggabungkan menjadi string
   return `${prefix}-${year}${month}${day}`;
 };
 
 const InputMessage = () => {
-  const { mutate } = useSendMessage();
+  const { mutate, isLoadingSendMessage, isSuccess } = useSendMessage();
 
   const mutationSendMessage = async (payload: ISendMessageChatRequestType) => {
     try {
-      const todaysId= getSessionIdPerDay()
+      const todaysId = getSessionIdPerDay();
 
       mutate({
         chatInput: payload.chatInput,
@@ -72,13 +73,17 @@ const InputMessage = () => {
                 />
 
                 <InputGroupAddon align={"block-end"} aria-label="Submit">
-                  <InputGroupButton
-                    type="submit"
-                    size={"sm"}
-                    className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-white"
-                  >
-                    <IconArrowUp className="text-4xl " />
-                  </InputGroupButton>
+                  {isLoadingSendMessage ? (
+                    <Spinner />
+                  ) : (
+                    <InputGroupButton
+                      type="submit"
+                      size={"sm"}
+                      className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-white"
+                    >
+                      <IconArrowUp className="text-4xl " />
+                    </InputGroupButton>
+                  )}
                 </InputGroupAddon>
               </InputGroup>
             );
