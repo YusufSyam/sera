@@ -12,7 +12,7 @@ import { useForm } from "@tanstack/react-form";
 import { ISendMessageChatRequestType } from "@/types/chat.types";
 import { Spinner } from "@/components/ui/spinner";
 
-const getSessionIdPerDay = (prefix: string = "DAILY"): string => {
+export const getSessionIdPerDay = (prefix: string = "DAILY"): string => {
   const now = new Date();
 
   // Mengambil komponen tanggal saja

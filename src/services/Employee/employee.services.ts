@@ -39,6 +39,7 @@ class EmployeeServices {
       throw error;
     }
   }
+  
 
   async createEmployee(payload: IInsertEmployeRequestApiDataTypes[]) {
     try {

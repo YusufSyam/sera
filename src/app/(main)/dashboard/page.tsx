@@ -16,14 +16,29 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from "@/components/ui/table";
 import { useGetAllEmployees } from "@/features/chat/hooks/useEmployees";
-import { formatDate } from "@/lib/dateFuncs";
+import { formatDate } from "@/lib/dateFuncs.utils";
 import { IEmployeeResponseDataTypes } from "@/types/employee.types";
-import { BanknoteArrowUp, BrainCircuit, Plus, UserPlus, Users } from "lucide-react";
+import {
+  BanknoteArrowUp,
+  BrainCircuit,
+  Plus,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { dummyJabatan } from "./employee.type";
+import { useGetHistoryChats } from "@/features/chat/hooks/useChat";
+import { get } from "http";
+import { getSessionIdPerDay } from "@/features/chat/components/InputMessage";
+import {
+  formatRupiah,
+  getKaryawanBaru,
+  hitungStatistikJabatan,
+  hitungTotalGaji,
+} from "@/lib/employeeFunc.utils";
 
 const DashboardPage = () => {
   const [employees, setEmployees] = useState<IEmployeeResponseDataTypes[]>([]);
@@ -38,17 +53,32 @@ const DashboardPage = () => {
     indexOfFirstEmployee,
     indexOfLastEmployee
   );
-  
-const { data, isLoading } = useGetAllEmployees();
-console.log('data',data)
-useEffect(() => {
-  if (data) {
-    setEmployees(data as IEmployeeResponseDataTypes[]);
-    setLoading(false);
-  }
-}, [data])
 
-  console.log('currentEmployees,indexOfFirstEmployee, indexOfLastEmployee',currentEmployees,indexOfFirstEmployee, indexOfLastEmployee)
+  const totalGaji = hitungTotalGaji(employees);
+  const karyawanBaru = getKaryawanBaru(employees);
+  const statistikJabatan = hitungStatistikJabatan(employees);
+
+  console.log("statistikJabatan", statistikJabatan);
+
+  const { data: todaysChatData } = useGetHistoryChats({
+    sessionId: getSessionIdPerDay(),
+  });
+
+  const { data, isLoading } = useGetAllEmployees();
+  console.log("data", data);
+  useEffect(() => {
+    if (data) {
+      setEmployees(data as IEmployeeResponseDataTypes[]);
+      setLoading(false);
+    }
+  }, [data]);
+
+  console.log(
+    "currentEmployees,indexOfFirstEmployee, indexOfLastEmployee",
+    currentEmployees,
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
   const totalEmployeePages = Math.ceil(employees.length / employeesPerPage);
   return (
     <section className="w-full px-8 py-5">
@@ -85,7 +115,7 @@ useEffect(() => {
                 <UserPlus className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">1</div>
+                <div className="text-2xl font-bold">{karyawanBaru?.length}</div>
                 <p className="text-xs text-muted-foreground">
                   Karyawan yang Bergabung bulan ini
                 </p>
@@ -100,57 +130,55 @@ useEffect(() => {
                 <BanknoteArrowUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">RP. 91.500.000</div>
+                <div className="text-2xl font-bold">
+                  {formatRupiah(totalGaji)}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   Estimasi pengeluaran bulanan
                 </p>
               </CardContent>
             </Card>
 
-
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Interaksi AI Hari Ini</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Interaksi AI Hari Ini
+                </CardTitle>
                 <BrainCircuit className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">156</div>
-                <p className="text-xs text-muted-foreground">Perintah diproses hari ini</p>
+                <div className="text-2xl font-bold">
+                  {todaysChatData?.length || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Perintah diproses hari ini
+                </p>
               </CardContent>
             </Card>
           </div>
-          
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Daftar Jabatan</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Daftar Jabatan</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {Object.entries(statistikJabatan).map(([jabatan, jumlah]) => (
+                  <div
+                    key={jabatan}
+                    className="flex items-center justify-between"
+                  >
                     <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-success" />
-                      <span className="text-sm">Programmer</span>
+                      <span className="text-sm">{jabatan}</span>
                     </div>
-                    <span className="font-medium">8</span>
+                    <span className="font-medium">{jumlah}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-warning" />
-                      <span className="text-sm">Boss</span>
-                    </div>
-                    <span className="font-medium">8</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-warning" />
-                      <span className="text-sm">Boss</span>
-                    </div>
-                    <span className="font-medium">8</span>
-                  </div>
-                </CardContent>
-              </Card>
+                ))}
+              </CardContent>
+            </Card>
 
-              {/* <Card>
+            {/* <Card>
                 <CardHeader>
                   <CardTitle>Status Maintenance</CardTitle>
                 </CardHeader>
@@ -170,7 +198,7 @@ useEffect(() => {
                   </Link>
                 </CardContent>
               </Card> */}
-            </div>
+          </div>
 
           <Card>
             <CardHeader>
@@ -178,9 +206,12 @@ useEffect(() => {
                 <div className="gap-1 flex">
                   <CardTitle>Daftar Karyawan</CardTitle>
                 </div>
-                <Button color="blue" className="bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white">
+                <Button
+                  color="blue"
+                  className="bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white"
+                >
                   <Plus className="h-4 w-4" />
-                  <p >Tambah Karyawan</p>
+                  <p>Tambah Karyawan</p>
                 </Button>
               </div>
             </CardHeader>
@@ -196,15 +227,19 @@ useEffect(() => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentEmployees.map((employee: IEmployeeResponseDataTypes, index: number) => (
-                    <TableRow key={employee.id}>
-                      <TableCell>{indexOfFirstEmployee + index + 1}</TableCell>
-                      <TableCell>{employee.nama}</TableCell>
-                      <TableCell>{`${dummyJabatan?.[employee.jabatan_id]?.nama_jabatan}`}</TableCell>
-                      <TableCell>{employee.gaji}</TableCell>
-                      <TableCell>{employee.tanggal_masuk}</TableCell>
-                    </TableRow>
-                  ))}
+                  {currentEmployees.map(
+                    (employee: IEmployeeResponseDataTypes, index: number) => (
+                      <TableRow key={employee.id}>
+                        <TableCell>
+                          {indexOfFirstEmployee + index + 1}
+                        </TableCell>
+                        <TableCell>{employee.nama}</TableCell>
+                        <TableCell>{employee.posisi}</TableCell>
+                        <TableCell>{formatRupiah(employee.gaji)}</TableCell>
+                        <TableCell>{employee.tanggal_masuk}</TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
 
