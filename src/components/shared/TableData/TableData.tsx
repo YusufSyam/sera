@@ -11,7 +11,7 @@ import { ITableDataPropsType } from "./types";
 export const TableData = ({ columns, data }: ITableDataPropsType<any>) => {
   return (
     <Table className="">
-      <TableHeader>
+      <TableHeader className="">
         <TableRow>
           {columns.map((item, key) => {
             return <TableHead key={key}>{item.label}</TableHead>;
@@ -19,7 +19,7 @@ export const TableData = ({ columns, data }: ITableDataPropsType<any>) => {
         </TableRow>
       </TableHeader>
 
-      <TableBody>
+      <TableBody className="">
         {data.map((row, i) => {
           return (
             <TableRow key={i + 1}>

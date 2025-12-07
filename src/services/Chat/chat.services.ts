@@ -1,16 +1,31 @@
 import { axiosClient as axios } from "@/lib/axios/axiosClient";
 import { supabaseClient } from "@/lib/supabase/client";
+import { IApiAxiosResponseType } from "@/types/base_api.types";
 import {
+  IChatbotResponseType,
   IGetChatMessageRequestType,
   ISendMessageChatRequestType,
 } from "@/types/chat.types";
 
 class ChatServices {
-  async sendMessage(params: ISendMessageChatRequestType) {
+  async sendMessage(
+    params: ISendMessageChatRequestType
+  ): Promise<IApiAxiosResponseType<IChatbotResponseType>> {
     try {
-      const response: { output: string } = await axios.post("/", { ...params });
+      const response = await axios.post(
+        "/chatbot",
+        { ...params },
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2aWhqbnVleHZ1bW92a2NwcmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1OTAzODMsImV4cCI6MjA4MDE2NjM4M30.uQXuirjcSqYbPcfO5AqhoL2xy4YUXknwro_Rw7rGNqE
+`,
+          },
+        }
+      );
 
-      return response.output;
+      const data: IApiAxiosResponseType<IChatbotResponseType> = response.data;
+
+      return data;
     } catch (error) {
       throw error;
     }

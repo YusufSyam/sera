@@ -23,6 +23,7 @@ export default function RootLayout({
           text="Lihat Dashboard Anda"
           textColor="text-blue-500"
         ></HeaderApp>
+
         <SidebarTrigger className="block md:hidden" />
         {children}
       </main>

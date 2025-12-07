@@ -53,7 +53,7 @@ const InputMessage = () => {
                   name={field.name}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="border-0 resize- bg-transparent px-3 py-2.5 text-base outline-none md:text-sm w-full min-h-16"
+                  className="border-0 resize- bg-transparent px-3 py-2.5 text-base outline-none md:text-sm w-full min-h-fit"
                   placeholder="Silahkan berikan saya perintah"
                 />
 
@@ -61,7 +61,7 @@ const InputMessage = () => {
                   <InputGroupButton
                     type="submit"
                     size={"sm"}
-                    className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white"
+                    className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-white"
                   >
                     <IconArrowUp className="text-4xl " />
                   </InputGroupButton>

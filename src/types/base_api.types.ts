@@ -6,6 +6,11 @@ export interface IApiSupabaseGeneralResponseType<T> {
   data?: T;
 }
 
+export interface IApiAxiosResponseType<T> {
+  status: number;
+  data?: T;
+}
+
 export interface ISessionRequestType {
   session_id: string;
 }

@@ -1,19 +1,23 @@
-import { Avatar } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { IHeaderPropsType } from "./Header.types";
-import { AvatarImage } from "@radix-ui/react-avatar";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 
 const HeaderApp = ({ text, textColor, children }: IHeaderPropsType) => {
   return (
-    <header className="border-b border-b-gray-200 px-7 py-3 md:flex items-center hidden ">
+    <header className="border-b border-b-gray-200 px-7 py-3 md:flex items-center hidden justify-between">
       <div className={`flex ${textColor}`}>
         <p>{text}</p>
         <IconArrowNarrowRight />
       </div>
 
-      <Avatar>
-        <AvatarImage />
-      </Avatar>
+      <div className="flex items-center gap-2.5">
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+        </Avatar>
+        <div className="flex flex-col gap-0">
+          <p className="">Yusuf Syam</p>
+        </div>
+      </div>
     </header>
   );
 };
