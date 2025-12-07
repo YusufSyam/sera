@@ -18,8 +18,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useGetDetailHistoryChats, useGetHistoryChats } from "@/features/chat/hooks/useChat";
 import { useGetAllEmployees } from "@/features/chat/hooks/useEmployees";
-import { formatDate } from "@/lib/dateFuncs.utils";
+import {
+  formatRupiah,
+  getKaryawanBaru,
+  hitungStatistikJabatan,
+  hitungTotalGaji,
+} from "@/lib/employeeFunc.utils";
 import { IEmployeeResponseDataTypes } from "@/types/employee.types";
 import {
   BanknoteArrowUp,
@@ -29,18 +35,7 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { dummyJabatan } from "./employee.type";
-import {
-  useGetDetailHistoryChats,
-  useGetHistoryChats,
-} from "@/features/chat/hooks/useChat";
-import { get } from "http";
-import {
-  formatRupiah,
-  getKaryawanBaru,
-  hitungStatistikJabatan,
-  hitungTotalGaji,
-} from "@/lib/employeeFunc.utils";
+import { TopPositionCharts } from "./TopPositionCharts";
 import { getSessionIdPerDay } from "@/lib/utils";
 
 const DashboardPage = () => {
@@ -178,6 +173,14 @@ const DashboardPage = () => {
                     <span className="font-medium">{jumlah}</span>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Daftar Jabatan</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <TopPositionCharts dataKaryawan={employees} />
               </CardContent>
             </Card>
 
