@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import SidebarApp from "@/components/layouts/Sidebar/Sidebar";
 import { outfit } from "@/lib/font.utils";
 import HeaderApp from "@/components/layouts/Header/Header";
 import TanstackProvider from "@/providers/TanstackProvider";
+import SidebarTrigger from "@/components/shared/SidebarTrigger/SidebarTrigger";
+import HeaderLogo from "@/components/layouts/Header/HeaderLogo";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +26,11 @@ export default function RootLayout({
           textColor="text-blue-500"
         ></HeaderApp>
 
-        <SidebarTrigger className="block md:hidden" />
+        <div className="flex flex-row  justify-between">
+          <SidebarTrigger />
+
+          <HeaderLogo align="right" />
+        </div>
         {children}
       </main>
     </SidebarProvider>

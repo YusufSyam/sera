@@ -10,14 +10,14 @@ const HeaderApp = ({ text, textColor, children }: IHeaderPropsType) => {
         <IconArrowNarrowRight />
       </div>
 
-      <div className="flex items-center gap-2.5">
+      {/* <div className="flex items-center gap-2.5">
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
         </Avatar>
         <div className="flex flex-col gap-0">
           <p className="">Yusuf Syam</p>
         </div>
-      </div>
+      </div> */}
     </header>
   );
 };

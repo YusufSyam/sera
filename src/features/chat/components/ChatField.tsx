@@ -1,11 +1,11 @@
 "use client";
 
-import { useGetHistoryChats } from "../hooks/useChat";
+import { useGetDetailHistoryChats, useGetHistoryChats } from "../hooks/useChat";
 import MessageBox from "./MessageBox";
 
-const ChatField = () => {
-  const { data } = useGetHistoryChats({
-    sessionId: "false",
+const ChatField = ({ sessionId }: { sessionId: string }) => {
+  const { data } = useGetDetailHistoryChats({
+    sessionId,
   });
 
   data?.map((item) => console.log("data historiesss chatting = ", item));

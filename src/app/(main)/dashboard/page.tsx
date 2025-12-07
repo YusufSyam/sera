@@ -18,8 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getSessionIdPerDay } from "@/features/chat/components/InputMessage";
-import { useGetHistoryChats } from "@/features/chat/hooks/useChat";
+import { useGetDetailHistoryChats, useGetHistoryChats } from "@/features/chat/hooks/useChat";
 import { useGetAllEmployees } from "@/features/chat/hooks/useEmployees";
 import {
   formatRupiah,
@@ -37,6 +36,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TopPositionCharts } from "./TopPositionCharts";
+import { getSessionIdPerDay } from "@/lib/utils";
 
 const DashboardPage = () => {
   const [employees, setEmployees] = useState<IEmployeeResponseDataTypes[]>([]);
@@ -58,7 +58,7 @@ const DashboardPage = () => {
 
   console.log("statistikJabatan", statistikJabatan);
 
-  const { data: todaysChatData } = useGetHistoryChats({
+  const { data: todaysChatData } = useGetDetailHistoryChats({
     sessionId: getSessionIdPerDay(),
   });
 
