@@ -11,8 +11,8 @@ import { useSendMessage } from "../hooks/useChat";
 import { useForm } from "@tanstack/react-form";
 import { ISendMessageChatRequestType } from "@/types/chat.types";
 import { Spinner } from "@/components/ui/spinner";
-import { getSessionIdPerDay } from "@/lib/utils";
 import { useState } from "react";
+import { getSessionIdPerDay } from "@/lib/utils";
 
 const InputMessage = () => {
   const { mutate, isLoadingSendMessage, isSuccess, isPending } =

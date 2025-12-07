@@ -30,15 +30,18 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { dummyJabatan } from "./employee.type";
-import { useGetHistoryChats } from "@/features/chat/hooks/useChat";
+import {
+  useGetDetailHistoryChats,
+  useGetHistoryChats,
+} from "@/features/chat/hooks/useChat";
 import { get } from "http";
-import { getSessionIdPerDay } from "@/features/chat/components/InputMessage";
 import {
   formatRupiah,
   getKaryawanBaru,
   hitungStatistikJabatan,
   hitungTotalGaji,
 } from "@/lib/employeeFunc.utils";
+import { getSessionIdPerDay } from "@/lib/utils";
 
 const DashboardPage = () => {
   const [employees, setEmployees] = useState<IEmployeeResponseDataTypes[]>([]);
@@ -60,7 +63,7 @@ const DashboardPage = () => {
 
   console.log("statistikJabatan", statistikJabatan);
 
-  const { data: todaysChatData } = useGetHistoryChats({
+  const { data: todaysChatData } = useGetDetailHistoryChats({
     sessionId: getSessionIdPerDay(),
   });
 
