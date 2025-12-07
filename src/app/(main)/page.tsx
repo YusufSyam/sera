@@ -1,6 +1,6 @@
 import InputMessage from "@/features/chat/components/InputMessage";
 
-export default function MainPage({ children }: { children: React.ReactNode }) {
+export default function MainPage() {
   return (
     <section className="w-full px-5">
       <h1 className="text-3xl md:text-5xl font-medium text-center mt-52">
@@ -9,8 +9,7 @@ export default function MainPage({ children }: { children: React.ReactNode }) {
 
       <div className="my-12"></div>
 
-      <InputMessage />
-      {children}
+      <InputMessage isNewChat={true} />
     </section>
   );
 }

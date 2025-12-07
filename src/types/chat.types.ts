@@ -8,7 +8,12 @@ export interface IGetChatMessageRequestType {
 }
 
 export interface IChatbotResponseType {
-  webhook: string;
+  history: IHistoryChatbotResponseType[];
+  webhook: IWebhookChatResponseType[];
+}
+
+export interface IWebhookChatResponseType {
+  output: string;
 }
 
 export interface IHistoryChatbotResponseType {

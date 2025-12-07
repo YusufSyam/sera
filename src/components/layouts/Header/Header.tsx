@@ -1,14 +1,15 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { IHeaderPropsType } from "./Header.types";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
+import Link from "next/link";
 
-const HeaderApp = ({ text, textColor, children }: IHeaderPropsType) => {
+const HeaderApp = ({ text, textColor, href, children }: IHeaderPropsType) => {
   return (
     <header className="border-b border-b-gray-200 px-7 py-3 md:flex items-center hidden justify-between">
-      <div className={`flex ${textColor}`}>
+      <Link href={href} className={`flex ${textColor}`}>
         <p>{text}</p>
         <IconArrowNarrowRight />
-      </div>
+      </Link>
 
       {/* <div className="flex items-center gap-2.5">
         <Avatar>

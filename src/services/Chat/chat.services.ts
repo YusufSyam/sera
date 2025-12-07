@@ -1,6 +1,5 @@
 import { axiosClient as axios } from "@/lib/axios/axiosClient";
 import { supabaseClient } from "@/lib/supabase/client";
-import { IApiAxiosResponseType } from "@/types/base_api.types";
 import {
   IChatbotResponseType,
   IGetChatMessageRequestType,
@@ -10,7 +9,7 @@ import {
 class ChatServices {
   async sendMessage(
     params: ISendMessageChatRequestType
-  ): Promise<IApiAxiosResponseType<IChatbotResponseType>> {
+  ): Promise<IChatbotResponseType> {
     try {
       const response = await axios.post(
         "https://rvihjnuexvumovkcprdb.supabase.co/functions/v1/chatBot",
@@ -26,9 +25,12 @@ class ChatServices {
         }
       );
 
-      const data: IApiAxiosResponseType<IChatbotResponseType> = response.data;
+      const mappingResponse: IChatbotResponseType = {
+        history: (response as any).history,
+        webhook: (response as any).webhook,
+      };
 
-      return data;
+      return mappingResponse;
     } catch (error) {
       throw error;
     }

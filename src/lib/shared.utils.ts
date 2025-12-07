@@ -25,10 +25,4 @@ export const sidebarItemsData = [
     icon: IconUsersGroup,
     href: "/employee",
   },
-  {
-    id: 4,
-    text: "Payroll",
-    icon: IconReceipt2,
-    href: "/payroll",
-  },
 ];
