@@ -51,6 +51,8 @@ class ChatServices {
         .from("n8n_chat_histories")
         .select("id, message, session_id")
         .eq(`session_id`, params.sessionId);
+
+      console.log(`data history chat = ${data}`);
       return data;
     } catch (error) {
       throw error;

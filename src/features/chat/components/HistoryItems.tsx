@@ -9,7 +9,7 @@ import { CHAT_ROUTE } from "@/constant/router_name";
 
 const HistoryItem = () => {
   const { data } = useGetHistoryChats({
-    sessionId: `9ba416ab003f44a88da596ea9cceee21`,
+    sessionId: `false`,
   });
 
   console.log("history data = ", data);
