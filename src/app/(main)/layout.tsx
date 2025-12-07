@@ -6,6 +6,7 @@ import HeaderApp from "@/components/layouts/Header/Header";
 import TanstackProvider from "@/providers/TanstackProvider";
 import SidebarTrigger from "@/components/shared/SidebarTrigger/SidebarTrigger";
 import HeaderLogo from "@/components/layouts/Header/HeaderLogo";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,6 +32,9 @@ export default function RootLayout({
 
           <HeaderLogo align="right" />
         </div>
+
+        <Toaster />
+        
         {children}
       </main>
     </SidebarProvider>

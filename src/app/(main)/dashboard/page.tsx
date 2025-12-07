@@ -28,7 +28,10 @@ import {
   formatRupiah,
   getNewEmployees,
 } from "@/lib/employeeFunc.utils";
-import { IEmployeeResponseDataTypes } from "@/types/employee.types";
+import {
+  IEmployeeResponseDataTypes,
+  IInsertEmployeRequestApiDataTypes,
+} from "@/types/employee.types";
 import {
   BanknoteArrowUp,
   BrainCircuit,
@@ -39,12 +42,25 @@ import {
 import { useEffect, useState } from "react";
 import { TopPositionCharts } from "./TopPositionCharts";
 import { getSessionIdPerDay } from "@/lib/utils";
+import { formatDate } from "@/lib/dateFuncs.utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import AddEmployeeForm from "./AddEmployeeForm";
+import { useInsertEmployee } from "@/features/employee/hooks/useEmployee";
+import { useToast } from "@/hooks/use-toast";
 
 const DashboardPage = () => {
   const [employees, setEmployees] = useState<IEmployeeResponseDataTypes[]>([]);
 
+  const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [employeesPage, setEmployeePage] = useState(1);
+  const { toast } = useToast();
   const employeesPerPage = 10;
 
   const indexOfLastEmployee = employeesPage * employeesPerPage;
@@ -61,8 +77,14 @@ const DashboardPage = () => {
     sessionId: getSessionIdPerDay(),
   });
 
-  const { data, isLoading } = useGetAllEmployees();
+  const { data, isLoading, refetch } = useGetAllEmployees();
+  const { mutate: insertEmployee, isSuccess: isInsertSuccess } = useInsertEmployee();
+
   console.log("data", data);
+  useEffect(() => {
+    refetch()
+  }, [isInsertSuccess])
+
   useEffect(() => {
     if (data) {
       setEmployees(data as IEmployeeResponseDataTypes[]);
@@ -70,6 +92,40 @@ const DashboardPage = () => {
     }
   }, [data]);
   const totalEmployeePages = Math.ceil(employees.length / employeesPerPage);
+
+
+  const handleCreateEmployee = (data: IInsertEmployeRequestApiDataTypes) => {
+    const formattedDate = data?.tanggal_masuk?.toISOString()?.split("T")[0];
+
+    const payload : any[] = [{
+      ...data,
+      tanggal_masuk: formattedDate,
+    }];
+
+    // console.log(payload, 'payload')
+
+    insertEmployee(payload, {
+      onSuccess: () => {
+        toast({
+          title: "Berhasil!",
+          description: "Data karyawan berhasil ditambahkan.",
+          variant: "default",
+        });
+        console.log('ke sukses')
+        setShowForm(false); 
+      },
+      onError: (error) => {
+        toast({
+          title: "Gagal",
+          description: `Terjadi kesalahan: ${error?.message}`,
+          variant: "destructive",
+        }); 
+        console.log('ke error')
+        setShowForm(false); 
+      },
+    });
+  };
+
   return (
     <section className="w-full px-8 py-5">
       <h1 className="text-xl md:text-2xl font-medium mt-4">
@@ -79,6 +135,23 @@ const DashboardPage = () => {
           mendetail
         </p>
       </h1>
+
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Tambah Data Karyawan</DialogTitle>
+            <DialogDescription>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod,
+              suscipit?
+            </DialogDescription>
+          </DialogHeader>
+          <AddEmployeeForm
+            onSubmit={handleCreateEmployee}
+            onCancel={() => setShowForm(false)}
+            isLoading={false}
+          />
+        </DialogContent>
+      </Dialog>
 
       <div className="my-12">
         <div className="space-y-8">
@@ -155,7 +228,8 @@ const DashboardPage = () => {
                 </div>
                 <Button
                   color="blue"
-                  className="bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white"
+                  className="bg-linear-to-bl from-[#01AFFF] to-[#006AFF]  text-white cursor-pointer"
+                  onClick={() => setShowForm(true)}
                 >
                   <Plus className="h-4 w-4" />
                   <p>Tambah Karyawan</p>
@@ -183,7 +257,9 @@ const DashboardPage = () => {
                         <TableCell>{employee.nama}</TableCell>
                         <TableCell>{employee.posisi}</TableCell>
                         <TableCell>{formatRupiah(employee.gaji)}</TableCell>
-                        <TableCell>{employee.tanggal_masuk}</TableCell>
+                        <TableCell>
+                          {formatDate(new Date(employee.tanggal_masuk))}
+                        </TableCell>
                       </TableRow>
                     )
                   )}
