@@ -482,14 +482,6 @@ const DashboardPage = () => {
               )}
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Distribusi Jabatan</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <TopPositionCharts employeeData={employees} />
-            </CardContent>
-          </Card>
         </div>
       </div>
     </section>
