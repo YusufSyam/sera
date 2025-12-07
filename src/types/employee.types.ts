@@ -12,7 +12,8 @@ export interface IEmployeeResponseDataTypes {
   nama: string;
   gaji: number;
   tanggal_masuk: string;
-  posisi: string;
+  jabatan_id: number;
+  posisi?: string;
 }
 
 export interface IInsertEmployeRequestApiDataTypes {

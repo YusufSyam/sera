@@ -1,11 +1,9 @@
 import { supabaseClient } from "@/lib/supabase/client";
 import { IApiSupabaseGeneralResponseType } from "@/types/base_api.types";
 import {
-  IEmployeeResponseApiDataTypes,
   IEmployeeResponseDataTypes,
-  IInsertEmployeRequestApiDataTypes,
+  IInsertEmployeRequestApiDataTypes
 } from "@/types/employee.types";
-import { IJabatanResponseApiType } from "@/types/jabatan.types";
 
 class EmployeeServices {
   async getAll(): Promise<
@@ -27,6 +25,7 @@ class EmployeeServices {
             gaji: item.gaji,
             posisi: (item as any).jabatan.nama_jabatan,
             tanggal_masuk: item.tanggal_masuk,
+            jabatan_id: (item as any).jabatan.id
           };
         }
       );
