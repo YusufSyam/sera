@@ -11,33 +11,31 @@ import { useSendMessage } from "../hooks/useChat";
 import { useForm } from "@tanstack/react-form";
 import { ISendMessageChatRequestType } from "@/types/chat.types";
 import { Spinner } from "@/components/ui/spinner";
-
-const getSessionIdPerDay = (prefix: string = "DAILY"): string => {
-  const now = new Date();
-
-  // Mengambil komponen tanggal saja
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-
-  // Menggabungkan menjadi string
-  return `${prefix}-${year}${month}${day}`;
-};
+import { getSessionIdPerDay } from "@/lib/utils";
+import { useState } from "react";
 
 const InputMessage = () => {
-  const { mutate, isLoadingSendMessage, isSuccess } = useSendMessage();
+  const { mutate, isLoadingSendMessage, isSuccess, isPending } =
+    useSendMessage();
+  const [isSendMessageLoading, setIsSendMessageLoading] =
+    useState<boolean>(false);
 
   const mutationSendMessage = async (payload: ISendMessageChatRequestType) => {
+    setIsSendMessageLoading(true);
+
+    console.log(`loading send message.... ${isSendMessageLoading}`);
+
     try {
       const todaysId = getSessionIdPerDay();
 
-      console.log(`todays id = ${todaysId}`);
       mutate({
         chatInput: payload.chatInput,
         sessionId: todaysId,
       });
     } catch (error) {
       console.log("error");
+    } finally {
+      setIsSendMessageLoading(false);
     }
   };
 
@@ -57,7 +55,7 @@ const InputMessage = () => {
   };
 
   return (
-    <div className="md:px-10  w-full left-0 sticky ">
+    <div className="md:px-10  w-full left-0 sticky bottom-8 bg-white z-20">
       <form onSubmit={(e) => handleSendMessage(e)}>
         <form.Field
           name="chatInput"
@@ -69,22 +67,23 @@ const InputMessage = () => {
                   name={field.name}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className="border-0 resize- bg-transparent px-3 py-2.5 text-base outline-none md:text-sm w-full min-h-fit"
+                  className="border-0  bg-transparent px-3 py-2.5 text-base outline-none md:text-sm w-full "
                   placeholder="Silahkan berikan saya perintah"
                 />
 
                 <InputGroupAddon align={"block-end"} aria-label="Submit">
-                  {isLoadingSendMessage ? (
-                    <Spinner />
-                  ) : (
-                    <InputGroupButton
-                      type="submit"
-                      size={"sm"}
-                      className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-white"
-                    >
+                  <InputGroupButton
+                    type="submit"
+                    size={"sm"}
+                    disabled={isPending}
+                    className="ml-auto bg-linear-to-bl from-[#01AFFF] to-[#006AFF] text-white"
+                  >
+                    {isPending ? (
+                      <Spinner />
+                    ) : (
                       <IconArrowUp className="text-4xl " />
-                    </InputGroupButton>
-                  )}
+                    )}
+                  </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
             );

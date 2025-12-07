@@ -1,12 +1,15 @@
+import { GET_ALL_CHAT_HISTORY_SESSION } from "@/constant/query_key";
 import chatServices from "@/services/Chat/chat.services";
 import {
   IGetChatMessageRequestType,
   ISendMessageChatRequestType,
 } from "@/types/chat.types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 export const useSendMessage = () => {
+  const queryClient = useQueryClient();
+
   const [isLoadingSendMessage, setIsLoadingSendMessage] =
     useState<boolean>(false);
 
@@ -15,6 +18,9 @@ export const useSendMessage = () => {
       return chatServices.sendMessage(payload);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [GET_ALL_CHAT_HISTORY_SESSION],
+      });
       setIsLoadingSendMessage(true);
       setTimeout(() => {
         setIsLoadingSendMessage(false);
@@ -25,11 +31,24 @@ export const useSendMessage = () => {
   return { ...mutation, isLoadingSendMessage };
 };
 
-export const useGetHistoryChats = (params: IGetChatMessageRequestType) => {
+export const useGetHistoryChats = () => {
   return useQuery({
-    queryKey: ["history-chats", params.sessionId],
+    queryKey: ["history-chats"],
     queryFn: async () => {
-      const response = await chatServices.getAllHistoryChats({
+      const response = await chatServices.getAllHistoryChats();
+
+      return response;
+    },
+  });
+};
+
+export const useGetDetailHistoryChats = (
+  params: IGetChatMessageRequestType
+) => {
+  return useQuery({
+    queryKey: [GET_ALL_CHAT_HISTORY_SESSION],
+    queryFn: async () => {
+      const response = await chatServices.getChatDetailBySessionId({
         sessionId: params.sessionId,
       });
 

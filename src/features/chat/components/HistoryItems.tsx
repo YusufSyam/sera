@@ -8,11 +8,7 @@ import { limitToTwoSentences } from "@/lib/utils";
 import { CHAT_ROUTE } from "@/constant/router_name";
 
 const HistoryItem = () => {
-  const { data } = useGetHistoryChats({
-    sessionId: `false`,
-  });
-
-  console.log("history data = ", data);
+  const { data } = useGetHistoryChats();
 
   return (
     <>
