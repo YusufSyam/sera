@@ -18,13 +18,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetDetailHistoryChats, useGetHistoryChats } from "@/features/chat/hooks/useChat";
+import {
+  useGetDetailHistoryChats,
+  useGetHistoryChats,
+} from "@/features/chat/hooks/useChat";
 import { useGetAllEmployees } from "@/features/chat/hooks/useEmployees";
 import {
+  countTotalSalary,
   formatRupiah,
-  getKaryawanBaru,
-  hitungStatistikJabatan,
-  hitungTotalGaji,
+  getNewEmployees,
 } from "@/lib/employeeFunc.utils";
 import { IEmployeeResponseDataTypes } from "@/types/employee.types";
 import {
@@ -52,11 +54,8 @@ const DashboardPage = () => {
     indexOfLastEmployee
   );
 
-  const totalGaji = hitungTotalGaji(employees);
-  const karyawanBaru = getKaryawanBaru(employees);
-  const statistikJabatan = hitungStatistikJabatan(employees);
-
-  console.log("statistikJabatan", statistikJabatan);
+  const totalSalary = countTotalSalary(employees);
+  const newEmployees = getNewEmployees(employees);
 
   const { data: todaysChatData } = useGetDetailHistoryChats({
     sessionId: getSessionIdPerDay(),
@@ -70,13 +69,6 @@ const DashboardPage = () => {
       setLoading(false);
     }
   }, [data]);
-
-  console.log(
-    "currentEmployees,indexOfFirstEmployee, indexOfLastEmployee",
-    currentEmployees,
-    indexOfFirstEmployee,
-    indexOfLastEmployee
-  );
   const totalEmployeePages = Math.ceil(employees.length / employeesPerPage);
   return (
     <section className="w-full px-8 py-5">
@@ -113,7 +105,7 @@ const DashboardPage = () => {
                 <UserPlus className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{karyawanBaru?.length}</div>
+                <div className="text-2xl font-bold">{newEmployees?.length}</div>
                 <p className="text-xs text-muted-foreground">
                   Karyawan yang Bergabung bulan ini
                 </p>
@@ -129,7 +121,7 @@ const DashboardPage = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatRupiah(totalGaji)}
+                  {formatRupiah(totalSalary)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Estimasi pengeluaran bulanan
@@ -153,57 +145,6 @@ const DashboardPage = () => {
                 </p>
               </CardContent>
             </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Daftar Jabatan</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {Object.entries(statistikJabatan).map(([jabatan, jumlah]) => (
-                  <div
-                    key={jabatan}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="h-3 w-3 rounded-full bg-success" />
-                      <span className="text-sm">{jabatan}</span>
-                    </div>
-                    <span className="font-medium">{jumlah}</span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Daftar Jabatan</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <TopPositionCharts dataKaryawan={employees} />
-              </CardContent>
-            </Card>
-
-            {/* <Card>
-                <CardHeader>
-                  <CardTitle>Status Maintenance</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Selesai</span>
-                    <span className="font-medium">5</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Dalam Proses</span>
-                    <span className="font-medium">6</span>
-                  </div>
-                  <Link to="/workorders">
-                    <Button variant="outline" className="w-full mt-4">
-                      Detail Maintenance
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card> */}
           </div>
 
           <Card>
@@ -305,6 +246,14 @@ const DashboardPage = () => {
                   </Pagination>
                 </div>
               )}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Distribusi Jabatan</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <TopPositionCharts employeeData={employees} />
             </CardContent>
           </Card>
         </div>
