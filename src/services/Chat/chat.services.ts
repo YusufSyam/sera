@@ -8,17 +8,22 @@ import {
 class ChatServices {
   async sendMessage(params: ISendMessageChatRequestType) {
     try {
-      const response = await supabaseClient.functions.invoke(
-        "chatBot",
+      const response: { output: string } = await axios.post(
+        "https://rvihjnuexvumovkcprdb.supabase.co/functions/v1/chatBot",
         {
-          body: {
-            chatInput: `${params.chatInput}`,
-            sessionId: params.sessionId,
+          ...params,
+        },
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization":
+              `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2aWhqbnVleHZ1bW92a2NwcmRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1OTAzODMsImV4cCI6MjA4MDE2NjM4M30.uQXuirjcSqYbPcfO5AqhoL2xy4YUXknwro_Rw7rGNqE`,
           },
         }
       );
 
-      return response.data;
+      return response.output;
     } catch (error) {
       throw error;
     }
