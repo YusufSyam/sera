@@ -13,17 +13,17 @@ import { ISendMessageChatRequestType } from "@/types/chat.types";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import { getSessionIdPerDay } from "@/lib/utils";
+import { IInputMessagePropsType } from "../types";
 
-const InputMessage = () => {
-  const { mutate, isLoadingSendMessage, isSuccess, isPending } =
-    useSendMessage();
+const InputMessage = ({ isNewChat }: IInputMessagePropsType) => {
+  const { mutate, isLoadingSendMessage, isSuccess, isPending } = useSendMessage(
+    { isNewChat }
+  );
   const [isSendMessageLoading, setIsSendMessageLoading] =
     useState<boolean>(false);
 
   const mutationSendMessage = async (payload: ISendMessageChatRequestType) => {
     setIsSendMessageLoading(true);
-
-    console.log(`loading send message.... ${isSendMessageLoading}`);
 
     try {
       const todaysId = getSessionIdPerDay();

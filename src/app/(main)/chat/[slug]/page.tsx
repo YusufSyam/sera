@@ -1,13 +1,14 @@
 import ChatField from "@/features/chat/components/ChatField";
 import InputMessage from "@/features/chat/components/InputMessage";
 
-const ChatPage = ({ children }: { children: React.ReactNode }) => {
+const ChatPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+
   return (
     <section className="w-full ">
-      <ChatField sessionId="DAILY-20251207" />
+      <ChatField sessionId={slug} />
 
-      <InputMessage />
-      {children}
+      <InputMessage isNewChat={false} />
 
       <div className="w-full bg-white sticky bottom-0">
         <p className="text-center text-xs py-2 text-neutral-400">

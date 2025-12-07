@@ -1,4 +1,7 @@
-import { GET_ALL_CHAT_HISTORY_SESSION } from "@/constant/query_key";
+import {
+  GET_ALL_CHAT_HISTORY,
+  GET_ALL_CHAT_HISTORY_SESSION,
+} from "@/constant/query_key";
 import chatServices from "@/services/Chat/chat.services";
 import {
   IGetChatMessageRequestType,
@@ -6,9 +9,12 @@ import {
 } from "@/types/chat.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { IInputMessagePropsType } from "../types";
+import { useRouter } from "next/navigation";
 
-export const useSendMessage = () => {
+export const useSendMessage = ({ isNewChat }: IInputMessagePropsType) => {
   const queryClient = useQueryClient();
+  const navigate = useRouter();
 
   const [isLoadingSendMessage, setIsLoadingSendMessage] =
     useState<boolean>(false);
@@ -17,7 +23,16 @@ export const useSendMessage = () => {
     mutationFn: (payload: ISendMessageChatRequestType) => {
       return chatServices.sendMessage(payload);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const sessionIdFromResponse = response.history[0].session_id;
+
+      if (isNewChat) {
+        queryClient.invalidateQueries({
+          queryKey: [GET_ALL_CHAT_HISTORY],
+        });
+
+        navigate.push(`/chat/${sessionIdFromResponse}`);
+      }
       queryClient.invalidateQueries({
         queryKey: [GET_ALL_CHAT_HISTORY_SESSION],
       });
